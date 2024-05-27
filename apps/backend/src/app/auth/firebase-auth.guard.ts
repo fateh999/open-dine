@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { IS_PUBLIC_KEY } from './public.decorator';
 

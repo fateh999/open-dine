@@ -1,5 +1,5 @@
 import NxWelcome from './nx-welcome';
-
+import '../utils/firebase-config';
 import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
