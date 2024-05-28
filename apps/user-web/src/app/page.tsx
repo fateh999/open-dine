@@ -1,4 +1,5 @@
 import styles from './page.module.css';
+import '../utils/firebase-config';
 
 export default function Index() {
   /*
