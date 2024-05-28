@@ -1,0 +1,78 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("RESTAURANT_DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../src/prisma-clients/restaurant"
+}
+
+enum FoodType {
+    VEG
+    NON_VEG
+    VEGAN
+}
+
+model Category {
+    id    String @id @default(cuid())
+    name  String
+    foods Food[]
+}
+
+model Food {
+    id             String              @id @default(cuid())
+    categoryId     String
+    category       Category            @relation(fields: [categoryId], references: [id])
+    name           String
+    description    String?
+    photoUrl       String?
+    foodType       FoodType
+    customizations FoodCustomization[]
+    createdAt      DateTime            @default(now())
+    updatedAt      DateTime            @updatedAt
+    OrderItem      OrderItem[]
+}
+
+model FoodCustomization {
+    id                     String                   @id @default(cuid())
+    foodId                 String
+    food                   Food                     @relation(fields: [foodId], references: [id])
+    name                   String
+    costPrice              Float
+    sellingPrice           Float
+    isDefault              Boolean                  @default(false)
+    createdAt              DateTime                 @default(now())
+    updatedAt              DateTime                 @updatedAt
+    OrderItemCustomization OrderItemCustomization[]
+}
+
+model Order {
+    id        String      @id @default(cuid())
+    userId    String?
+    staffId   String?
+    table     String?
+    total     Float
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    items     OrderItem[]
+}
+
+model OrderItem {
+    id             String                   @id @default(cuid())
+    orderId        String
+    order          Order                    @relation(fields: [orderId], references: [id])
+    foodId         String
+    food           Food                     @relation(fields: [foodId], references: [id])
+    quantity       Int
+    total          Float
+    customizations OrderItemCustomization[]
+}
+
+model OrderItemCustomization {
+    id              String            @id @default(cuid())
+    orderItemId     String
+    orderItem       OrderItem         @relation(fields: [orderItemId], references: [id])
+    customizationId String
+    customization   FoodCustomization @relation(fields: [customizationId], references: [id])
+}

@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/prisma-clients/tenant"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  STAFF
+  USER
+}
+
+model User {
+  id          String       @id @default(cuid())
+  displayName String
+  email       String       @unique
+  photoUrl    String?
+  disabled    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  role        UserRole
+  restaurants Restaurant[]
+}
+
+model Restaurant {
+  id                   String             @id @default(cuid())
+  name                 String
+  slug                 String             @unique()
+  ownerId              String
+  owner                User               @relation(fields: [ownerId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  databaseConnectionId String
+  databaseConnection   DatabaseConnection @relation(fields: [databaseConnectionId], references: [id])
+}
+
+model DatabaseConnection {
+  id         String       @id @default(cuid())
+  host       String
+  port       Int
+  username   String
+  password   String
+  dbName     String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Restaurant Restaurant[]
+}

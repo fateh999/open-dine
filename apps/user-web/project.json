@@ -4,6 +4,10 @@
   "sourceRoot": "apps/user-web",
   "projectType": "application",
   "tags": [],
-  "// targets": "to see all targets run: nx show project user-web --web",
-  "targets": {}
+  "targets": {
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/user-web/Dockerfile . -t user-web"
+    }
+  }
 }

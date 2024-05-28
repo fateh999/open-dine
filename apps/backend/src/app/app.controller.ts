@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { Public } from './auth/public.decorator';
+import { RestaurantSlug } from './prisma/restaurant-slug.decorator';
 
 @Controller()
 export class AppController {
@@ -9,7 +10,7 @@ export class AppController {
 
   @Public()
   @Get()
-  getData() {
-    return this.appService.getData();
+  getData(@RestaurantSlug() restaurantSlug: string) {
+    return this.appService.getData(restaurantSlug);
   }
 }
