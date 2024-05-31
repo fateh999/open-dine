@@ -8,22 +8,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  SUPERADMIN
-  ADMIN
-  STAFF
+enum OwnerRole {
+  OWNER
   USER
 }
 
-model User {
+model Owner {
   id          String       @id @default(cuid())
-  displayName String
+  displayName String?
   email       String       @unique
   photoUrl    String?
   disabled    Boolean      @default(false)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  role        UserRole
+  role        OwnerRole
   restaurants Restaurant[]
 }
 
@@ -32,7 +30,7 @@ model Restaurant {
   name                 String
   slug                 String             @unique()
   ownerId              String
-  owner                User               @relation(fields: [ownerId], references: [id])
+  owner                Owner              @relation(fields: [ownerId], references: [id])
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
   databaseConnectionId String

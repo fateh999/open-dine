@@ -2,12 +2,15 @@
   Warnings:
 
   - You are about to drop the `DatabaseConnection` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `Owner` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `Restaurant` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
 
 */
 -- CreateEnum
 CREATE TYPE "FoodType" AS ENUM ('VEG', 'NON_VEG', 'VEGAN');
+
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'STAFF', 'CUSTOMER');
 
 -- DropForeignKey
 ALTER TABLE "Restaurant" DROP CONSTRAINT "Restaurant_databaseConnectionId_fkey";
@@ -19,13 +22,27 @@ ALTER TABLE "Restaurant" DROP CONSTRAINT "Restaurant_ownerId_fkey";
 DROP TABLE "DatabaseConnection";
 
 -- DropTable
-DROP TABLE "Restaurant";
+DROP TABLE "Owner";
 
 -- DropTable
-DROP TABLE "User";
+DROP TABLE "Restaurant";
 
 -- DropEnum
-DROP TYPE "UserRole";
+DROP TYPE "OwnerRole";
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "displayName" TEXT,
+    "email" TEXT NOT NULL,
+    "photoUrl" TEXT,
+    "disabled" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "role" "UserRole" NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Category" (
@@ -95,6 +112,9 @@ CREATE TABLE "OrderItemCustomization" (
 
     CONSTRAINT "OrderItemCustomization_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Food" ADD CONSTRAINT "Food_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

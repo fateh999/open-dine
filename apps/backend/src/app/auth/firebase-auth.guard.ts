@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { IS_PUBLIC_KEY } from './public.decorator';
 
@@ -24,7 +25,8 @@ export class FirebaseAuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const ctx = GqlExecutionContext.create(context);
+    const request = ctx.getContext().req;
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
@@ -37,9 +39,10 @@ export class FirebaseAuthGuard implements CanActivate {
       const decodedToken = await this.firebaseAdminService
         .getAuth()
         .verifyIdToken(token);
-      request.user = decodedToken;
+      request.user = await this.firebaseAdminService.getUser(decodedToken.sub);
       return true;
     } catch (error) {
+      console.log(error);
       throw new UnauthorizedException('Invalid token');
     }
   }

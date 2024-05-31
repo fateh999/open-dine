@@ -1,24 +1,25 @@
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('SUPERADMIN', 'ADMIN', 'STAFF', 'USER');
+CREATE TYPE "OwnerRole" AS ENUM ('OWNER', 'USER');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "Owner" (
     "id" TEXT NOT NULL,
-    "displayName" TEXT NOT NULL,
+    "displayName" TEXT,
     "email" TEXT NOT NULL,
     "photoUrl" TEXT,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" "UserRole" NOT NULL,
+    "role" "OwnerRole" NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Owner_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Restaurant" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
     "ownerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -42,10 +43,13 @@ CREATE TABLE "DatabaseConnection" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "Owner_email_key" ON "Owner"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Restaurant_slug_key" ON "Restaurant"("slug");
 
 -- AddForeignKey
-ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "Owner"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Restaurant" ADD CONSTRAINT "Restaurant_databaseConnectionId_fkey" FOREIGN KEY ("databaseConnectionId") REFERENCES "DatabaseConnection"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

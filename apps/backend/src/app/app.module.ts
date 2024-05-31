@@ -1,34 +1,46 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { FirebaseModule } from './firebase/firebase.module';
 import { APP_GUARD } from '@nestjs/core';
 import { FirebaseAuthGuard } from './auth/firebase-auth.guard';
-import { RestaurantPrismaService } from './prisma/restaurant.prisma.service';
-import { TenantPrismaService } from './prisma/tenant.prisma.service';
-import { RestaurantMiddleware } from '../middleware/restaurant.middleware';
+import { RestaurantPrismaService } from './prisma/restaurant-prisma.service';
+import { TenantPrismaService } from './prisma/tenant-prisma.service';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { UserModule } from './user/user.module';
+import { RolesGuard } from './auth/roles.guard';
+import { RestaurantGuard } from './auth/restaurant.guard';
 
 @Module({
   imports: [
+    RestaurantModule,
+    UserModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      context: ({ req }) => ({ req }),
+    }),
     FirebaseModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: FirebaseAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RestaurantGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     TenantPrismaService,
     RestaurantPrismaService,
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RestaurantMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

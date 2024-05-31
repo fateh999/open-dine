@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '../../prisma-clients/restaurant';
-import { TenantPrismaService } from './tenant.prisma.service';
+import { TenantPrismaService } from './tenant-prisma.service';
 
 @Injectable()
 export class RestaurantPrismaService implements OnModuleInit, OnModuleDestroy {
