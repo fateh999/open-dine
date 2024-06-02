@@ -1,4 +1,4 @@
-# Open-Menu
+# Open-Dine
 
 ## WIP
 
