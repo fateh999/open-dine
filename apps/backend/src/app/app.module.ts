@@ -11,11 +11,14 @@ import { RestaurantModule } from './restaurant/restaurant.module';
 import { UserModule } from './user/user.module';
 import { RolesGuard } from './auth/roles.guard';
 import { RestaurantGuard } from './auth/restaurant.guard';
+import { OwnerModule } from './owner/owner.module';
 
 @Module({
   imports: [
     RestaurantModule,
     UserModule,
+    OwnerModule,
+    FirebaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,7 +27,6 @@ import { RestaurantGuard } from './auth/restaurant.guard';
       autoSchemaFile: true,
       context: ({ req }) => ({ req }),
     }),
-    FirebaseModule,
   ],
   providers: [
     {

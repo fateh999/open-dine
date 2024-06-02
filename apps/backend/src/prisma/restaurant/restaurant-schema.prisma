@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
     provider = "prisma-client-js"
-    output   = "../src/prisma-clients/restaurant"
+    output   = "./../../prisma-clients/restaurant"
 }
 
 enum FoodType {
@@ -40,7 +40,7 @@ model Category {
 model Food {
     id             String              @id @default(cuid())
     categoryId     String
-    category       Category            @relation(fields: [categoryId], references: [id])
+    category       Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     name           String
     description    String?
     photoUrl       String?
@@ -54,7 +54,7 @@ model Food {
 model FoodCustomization {
     id                     String                   @id @default(cuid())
     foodId                 String
-    food                   Food                     @relation(fields: [foodId], references: [id])
+    food                   Food                     @relation(fields: [foodId], references: [id], onDelete: Cascade)
     name                   String
     costPrice              Float
     sellingPrice           Float
@@ -78,9 +78,9 @@ model Order {
 model OrderItem {
     id             String                   @id @default(cuid())
     orderId        String
-    order          Order                    @relation(fields: [orderId], references: [id])
+    order          Order                    @relation(fields: [orderId], references: [id], onDelete: Cascade)
     foodId         String
-    food           Food                     @relation(fields: [foodId], references: [id])
+    food           Food                     @relation(fields: [foodId], references: [id], onDelete: Cascade)
     quantity       Int
     total          Float
     customizations OrderItemCustomization[]
@@ -89,7 +89,7 @@ model OrderItem {
 model OrderItemCustomization {
     id              String            @id @default(cuid())
     orderItemId     String
-    orderItem       OrderItem         @relation(fields: [orderItemId], references: [id])
+    orderItem       OrderItem         @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
     customizationId String
-    customization   FoodCustomization @relation(fields: [customizationId], references: [id])
+    customization   FoodCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
 }

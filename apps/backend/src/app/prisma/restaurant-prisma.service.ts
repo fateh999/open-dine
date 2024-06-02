@@ -21,17 +21,14 @@ export class RestaurantPrismaService implements OnModuleInit, OnModuleDestroy {
   async getClientBySlug(slug: string): Promise<PrismaClient> {
     if (!this.clients.has(slug)) {
       const restaurant = await this.tenantPrisma.restaurant.findUnique({
-        where: { slug },
-        include: { databaseConnection: true },
+        where: { slug: slug },
       });
 
       if (!restaurant) {
         throw new Error('Restaurant not found');
       }
-
-      const { databaseConnection } = restaurant;
-      const { host, port, username, password, dbName } = databaseConnection;
-      const databaseUrl = `postgresql://${username}:${password}@${host}:${port}/${dbName}`;
+      const { host, port, username, password } = restaurant;
+      const databaseUrl = `postgresql://${username}:${password}@${host}:${port}/${slug}`;
 
       const client = new PrismaClient({
         datasources: {

@@ -8,10 +8,10 @@ import { Roles } from '../auth/roles.decorator';
 import { UserRole } from './entities/user-role.enum';
 import { CreateUserInput } from './dto/create-user.input';
 import { EditUserInput } from './dto/edit-user.input';
-import { IsSuperAdmin } from '../common/is-super-admin.decorator';
+import { IsSuperAdmin } from '../common/decorators/is-super-admin.decorator';
 import { FirebaseUser } from '../auth/firebase-user.decorator';
 import { UserRecord } from 'firebase-admin/auth';
-import { RestaurantSlug } from '../common/restaurant-slug.decorator';
+import { RestaurantSlug } from '../common/decorators/restaurant-slug.decorator';
 
 @Resolver(() => User)
 export class UserResolver {

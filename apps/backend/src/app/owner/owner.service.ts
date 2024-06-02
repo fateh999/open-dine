@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOwnerInput } from './dto/create-owner.input';
-import { UpdateOwnerInput } from './dto/update-owner.input';
+import { TenantPrismaService } from '../prisma/tenant-prisma.service';
+import { UserRecord } from 'firebase-admin/auth';
+import { FirebaseAdminService } from '../firebase/firebase-admin.service';
+import { SyncOwnerInput } from './dto/sync-owner.input';
 
 @Injectable()
 export class OwnerService {
-  create(createOwnerInput: CreateOwnerInput) {
-    return 'This action adds a new owner';
+  constructor(
+    private readonly tenantPrismaService: TenantPrismaService,
+    private readonly firebaseAdminService: FirebaseAdminService
+  ) {}
+
+  async syncOwner(data: SyncOwnerInput) {
+    return this.tenantPrismaService.owner.upsert({
+      where: { id: data.id },
+      update: { ...data },
+      create: { ...data },
+    });
   }
 
-  findAll() {
-    return `This action returns all owner`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} owner`;
-  }
-
-  update(id: number, updateOwnerInput: UpdateOwnerInput) {
-    return `This action updates a #${id} owner`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} owner`;
+  async createOrFindInFirebase(data: CreateOwnerInput) {
+    let user: UserRecord;
+    try {
+      user = await this.firebaseAdminService.getUserByEmail(data.email);
+    } catch (error) {
+      user = await this.firebaseAdminService.createUser({
+        ...data,
+        emailVerified: true,
+      });
+    }
+    return user;
   }
 }

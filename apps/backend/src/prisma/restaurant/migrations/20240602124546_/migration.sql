@@ -1,34 +1,8 @@
-/*
-  Warnings:
-
-  - You are about to drop the `DatabaseConnection` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Owner` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Restaurant` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "FoodType" AS ENUM ('VEG', 'NON_VEG', 'VEGAN');
 
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'STAFF', 'CUSTOMER');
-
--- DropForeignKey
-ALTER TABLE "Restaurant" DROP CONSTRAINT "Restaurant_databaseConnectionId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Restaurant" DROP CONSTRAINT "Restaurant_ownerId_fkey";
-
--- DropTable
-DROP TABLE "DatabaseConnection";
-
--- DropTable
-DROP TABLE "Owner";
-
--- DropTable
-DROP TABLE "Restaurant";
-
--- DropEnum
-DROP TYPE "OwnerRole";
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -117,19 +91,19 @@ CREATE TABLE "OrderItemCustomization" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Food" ADD CONSTRAINT "Food_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Food" ADD CONSTRAINT "Food_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FoodCustomization" ADD CONSTRAINT "FoodCustomization_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FoodCustomization" ADD CONSTRAINT "FoodCustomization_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_foodId_fkey" FOREIGN KEY ("foodId") REFERENCES "Food"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItemCustomization" ADD CONSTRAINT "OrderItemCustomization_orderItemId_fkey" FOREIGN KEY ("orderItemId") REFERENCES "OrderItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItemCustomization" ADD CONSTRAINT "OrderItemCustomization_orderItemId_fkey" FOREIGN KEY ("orderItemId") REFERENCES "OrderItem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItemCustomization" ADD CONSTRAINT "OrderItemCustomization_customizationId_fkey" FOREIGN KEY ("customizationId") REFERENCES "FoodCustomization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItemCustomization" ADD CONSTRAINT "OrderItemCustomization_customizationId_fkey" FOREIGN KEY ("customizationId") REFERENCES "FoodCustomization"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -10,7 +10,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const analytics = getAnalytics(app);
 
-signInWithEmailAndPassword(auth, 'superadmin@openmenu.com', '12345678').then(
+signInWithEmailAndPassword(auth, 'superadmin@openmenu.com', '12345678Ft*').then(
   async (response) => {
     const token = await response.user.getIdToken();
     console.log({ token: `Bearer ${token}` });
