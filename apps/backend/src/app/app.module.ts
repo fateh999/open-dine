@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { RolesGuard } from './auth/roles.guard';
 import { RestaurantGuard } from './auth/restaurant.guard';
 import { OwnerModule } from './owner/owner.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { OwnerModule } from './owner/owner.module';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: true,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       context: ({ req }) => ({ req }),
     }),
   ],

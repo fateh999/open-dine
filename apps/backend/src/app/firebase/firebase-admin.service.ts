@@ -14,7 +14,9 @@ export class FirebaseAdminService implements OnModuleInit {
     if (admin.apps.length === 0) {
       admin.initializeApp({
         credential: admin.credential.cert(
-          JSON.parse(this.configService.get<string>('FIREBASE_SERVICE_ACCOUNT'))
+          JSON.parse(
+            this.configService.get<string>('FIREBASE_SERVICE_ACCOUNT'),
+          ),
         ),
       });
     }
@@ -30,6 +32,10 @@ export class FirebaseAdminService implements OnModuleInit {
 
   updateUser(uid: string, properties: UpdateRequest) {
     return this.getAuth().updateUser(uid, properties);
+  }
+
+  deleteUser(uid: string) {
+    return this.getAuth().deleteUser(uid);
   }
 
   getUser(uid: string) {

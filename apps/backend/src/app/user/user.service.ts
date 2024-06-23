@@ -14,7 +14,7 @@ import { RestaurantPrismaService } from '../prisma/restaurant-prisma.service';
 export class UserService {
   constructor(
     private restaurantPrismaService: RestaurantPrismaService,
-    private firebaseAdminService: FirebaseAdminService
+    private firebaseAdminService: FirebaseAdminService,
   ) {}
 
   async findOne(id: string, slug: string) {
@@ -25,7 +25,7 @@ export class UserService {
   async sync(
     data: SyncUserInput,
     slug: string,
-    role: UserRole = UserRole.CUSTOMER
+    role: UserRole = UserRole.STAFF,
   ) {
     const client = await this.restaurantPrismaService.getClientBySlug(slug);
     return client.user.upsert({
@@ -39,7 +39,7 @@ export class UserService {
     paginationArgs: PaginationArgs,
     filterUserArgs: FilterUserArgs,
     slug: string,
-    superadmin: boolean
+    superadmin: boolean,
   ) {
     const { skip, take } = paginationArgs;
     const { search, sortBy, sortOrder } = filterUserArgs;
@@ -64,12 +64,22 @@ export class UserService {
           role: { in: roles },
         };
 
-    return client.user.findMany({
-      where: whereClause,
-      skip,
-      take,
-      orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
-    });
+    const [items, totalCount] = await Promise.all([
+      client.user.findMany({
+        where: whereClause,
+        skip,
+        take,
+        orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
+      }),
+      client.user.count(),
+    ]);
+
+    return {
+      items,
+      totalCount,
+      totalPages: Math.ceil(totalCount / take),
+      currentPage: Math.ceil(skip / take) + 1,
+    };
   }
 
   async findInFirebase(email: string) {
@@ -93,5 +103,16 @@ export class UserService {
     const { id, ...editData } = data;
     const user = await this.firebaseAdminService.updateUser(id, editData);
     return user;
+  }
+
+  async deleteUser(id: string, slug: string) {
+    const client = await this.restaurantPrismaService.getClientBySlug(slug);
+    return client.user.delete({
+      where: { id: id },
+    });
+  }
+
+  async deleteUserInFirebase(id: string) {
+    return this.firebaseAdminService.deleteUser(id);
   }
 }

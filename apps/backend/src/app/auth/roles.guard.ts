@@ -17,13 +17,13 @@ export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private tenantPrismaService: TenantPrismaService,
-    private restaurantPrismaService: RestaurantPrismaService
+    private restaurantPrismaService: RestaurantPrismaService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
       ROLES_KEY,
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     if (!requiredRoles) {

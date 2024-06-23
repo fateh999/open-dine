@@ -17,7 +17,7 @@ enum FoodType {
 enum UserRole {
     ADMIN
     STAFF
-    CUSTOMER
+    SUPER_ADMIN
 }
 
 model User {

@@ -17,7 +17,7 @@ const execAsync = promisify(exec);
 export class OwnerResolver {
   constructor(
     private readonly ownerService: OwnerService,
-    private readonly tenantPrismaService: TenantPrismaService
+    private readonly tenantPrismaService: TenantPrismaService,
   ) {}
 
   @Public()
@@ -33,17 +33,16 @@ export class OwnerResolver {
       {
         name: 'Restaurant',
         slug: 'restaurant',
-      }
+      },
     );
   }
   /*TODO: After MVP, we need to create this a mutation so users can create restaurants through a web app after payment*/
   private async createOwnerAndRestaurant(
     @Args('createOwnerInput') createOwnerInput: CreateOwnerInput,
-    @Args('createRestaurantInput') createRestaurantInput: CreateRestaurantInput
+    @Args('createRestaurantInput') createRestaurantInput: CreateRestaurantInput,
   ) {
-    const firebaseUser = await this.ownerService.createOrFindInFirebase(
-      createOwnerInput
-    );
+    const firebaseUser =
+      await this.ownerService.createOrFindInFirebase(createOwnerInput);
     const syncUserInput: SyncOwnerInput = {
       id: firebaseUser.uid,
       displayName: firebaseUser.displayName,
@@ -57,7 +56,7 @@ export class OwnerResolver {
 
     const prismaSchemaPath = path.resolve(
       __dirname,
-      './prisma/restaurant/restaurant-schema.prisma'
+      './prisma/restaurant/restaurant-schema.prisma',
     );
 
     await execAsync(
@@ -67,7 +66,7 @@ export class OwnerResolver {
           ...process.env,
           RESTAURANT_DATABASE_URL: newDbUrl,
         },
-      }
+      },
     );
 
     await this.tenantPrismaService.restaurant.create({
