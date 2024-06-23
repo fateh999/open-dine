@@ -6,5 +6,5 @@ export const IsSuperAdmin = createParamDecorator(
     const gqlContext = GqlExecutionContext.create(ctx);
     const request = gqlContext.getContext().req;
     return request.superadmin ?? false;
-  }
+  },
 );

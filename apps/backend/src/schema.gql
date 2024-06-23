@@ -1,0 +1,83 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  displayName: String
+  email: String!
+  photoUrl: String
+  disabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  role: UserRole!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum UserRole {
+  ADMIN
+  STAFF
+  SUPER_ADMIN
+}
+
+type Restaurant {
+  id: ID!
+  name: String!
+  slug: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  owner: User!
+}
+
+type PaginatedUsersResponse {
+  items: [User!]!
+  totalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
+type Owner {
+  id: ID!
+  displayName: String
+  email: String!
+  photoUrl: String
+  disabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  restaurant(id: String!): Restaurant!
+  user(id: String!): User
+  userProfile: User
+  users(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedUsersResponse!
+}
+
+type Mutation {
+  createStaffUser(createUserInput: CreateUserInput!): User!
+  createAdminUser(createUserInput: CreateUserInput!): User!
+  editUser(editUserInput: EditUserInput!): User!
+  editStaffUser(editUserInput: EditUserInput!): User!
+  deleteStaffUser(id: String!): User!
+  createTestOwnerAndRestaurant: Owner!
+}
+
+input CreateUserInput {
+  displayName: String!
+  email: String!
+  password: String!
+  photoUrl: String
+}
+
+input EditUserInput {
+  displayName: String
+  email: String
+  password: String
+  photoUrl: String
+  id: ID!
+  disabled: Boolean
+}
