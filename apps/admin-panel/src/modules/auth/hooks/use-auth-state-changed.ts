@@ -4,6 +4,8 @@ import useAuthState from './use-auth-state';
 import { GetUserProfileQuery } from '@/__generated__/graphql';
 import { gql, useQuery } from '@apollo/client';
 import { signOut } from 'firebase/auth';
+import apolloClient from '@/utils/apollo-client';
+import { toast } from '@/components/ui/use-toast';
 
 const GET_USER_PROFILE = gql`
   query getUserProfile {
@@ -27,6 +29,14 @@ function useAuthStateChanged() {
         signOut(auth);
       }
     },
+    onError: (error) => {
+      toast({
+        title: 'Login Failed',
+        variant: 'destructive',
+        description: error?.message,
+      });
+      signOut(auth);
+    },
     skip: !firebaseLoggedIn,
   });
 
@@ -35,8 +45,11 @@ function useAuthStateChanged() {
       setFirebaseLoggedIn(user ? true : false);
       if (user) {
         refetch();
-      }
-      if (!user) {
+        useAuthState.setState({
+          initialized: true,
+        });
+      } else {
+        apolloClient.cache.reset();
         useAuthState.setState({
           loggedIn: false,
           initialized: true,

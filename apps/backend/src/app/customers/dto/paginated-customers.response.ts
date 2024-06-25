@@ -1,10 +1,10 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { User } from '../entities/user.entity';
+import { Customer } from '../entities/customer.entity';
 
 @ObjectType()
-export class PaginatedUsersResponse {
-  @Field(() => [User])
-  items: User[];
+export class PaginatedCustomersResponse {
+  @Field(() => [Customer])
+  items: Customer[];
 
   @Field(() => Int)
   totalCount: number;

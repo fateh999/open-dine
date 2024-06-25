@@ -1,8 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { SyncUserInput } from './dto/sync-user.input';
-import { PaginationArgs } from './dto/pagination.args';
-import { FilterUserArgs } from './dto/filter-user.args';
 import { User } from './entities/user.entity';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from './entities/user-role.enum';
@@ -13,6 +11,8 @@ import { FirebaseUser } from '../auth/firebase-user.decorator';
 import { UserRecord } from 'firebase-admin/auth';
 import { RestaurantSlug } from '../common/decorators/restaurant-slug.decorator';
 import { PaginatedUsersResponse } from './dto/paginated-users.response';
+import { PaginationArgs } from '../common/dto/pagination.args';
+import { FilterArgs } from '../common/dto/filter.args';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -48,13 +48,13 @@ export class UserResolver {
   @Query(() => PaginatedUsersResponse)
   async users(
     @Args() paginationArgs: PaginationArgs,
-    @Args() filterUserArgs: FilterUserArgs,
+    @Args() filterArgs: FilterArgs,
     @RestaurantSlug() slug: string,
     @IsSuperAdmin() isSuperAdmin: boolean,
   ) {
     return this.userService.findAll(
       paginationArgs,
-      filterUserArgs,
+      filterArgs,
       slug,
       isSuperAdmin,
     );

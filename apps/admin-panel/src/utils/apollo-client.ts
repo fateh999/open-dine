@@ -9,6 +9,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const token = auth.currentUser ? await getIdToken(auth.currentUser) : '';
+  console.log({ token });
   return {
     headers: {
       ...headers,
@@ -18,9 +19,11 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+const cache = new InMemoryCache();
+
 const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache,
 });
 
 export default apolloClient;
