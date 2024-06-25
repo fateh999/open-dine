@@ -8,12 +8,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { auth } from '@/utils/firebase-config';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import useLogin from '../hooks/use-login';
+import useGoogleLogin from '../hooks/use-google-login';
+import { Separator } from '@/components/ui/separator';
 
 const LoginInputSchema = z.object({
   email: z
@@ -31,16 +32,19 @@ function LoginForm() {
     },
     resolver: zodResolver(LoginInputSchema),
   });
+  const { mutate: login, isPending } = useLogin();
+  const { mutate: googleLogin, isPending: isGoogleLoginPending } =
+    useGoogleLogin();
 
-  const onSubmit = ({ email, password }: z.infer<typeof LoginInputSchema>) => {
-    console.log(email, password);
-    signInWithEmailAndPassword(auth, email, password);
+  const onSubmit = (data: z.infer<typeof LoginInputSchema>) => {
+    login(data);
   };
 
   return (
     <div className="mx-4 sm:mx-auto grid gap-6">
       <div className="grid gap-2 text-center">
-        <h1 className="text-3xl font-bold">Login</h1>
+        <h1 className="text-3xl font-bold mb-4">Open Dine</h1>
+        <h1 className="text-xl font-bold text-left">Login</h1>
         <p className="text-left text-balance text-muted-foreground">
           Enter your email & password below to login to your account
         </p>
@@ -91,14 +95,32 @@ function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isPending}>
               Login
-            </Button>
-            <Button variant="outline" className="w-full">
-              Login with Google
             </Button>
           </form>
         </Form>
+        <Separator className="my-4" />
+        <p className="text-left text-balance text-muted-foreground">
+          For Restaurant Owner
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={() => {
+            googleLogin();
+          }}
+          disabled={isGoogleLoginPending}
+        >
+          <img
+            className="w-4 h-4 mr-2"
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            loading="lazy"
+            alt="google logo"
+          ></img>
+          Login with Google
+        </Button>
       </div>
     </div>
   );

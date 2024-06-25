@@ -36,6 +36,7 @@ type Restaurant {
 type PaginatedUsersResponse {
   items: [User!]!
   totalCount: Int!
+  conditionalTotalCount: Int!
   totalPages: Int!
   currentPage: Int!
 }
@@ -50,11 +51,31 @@ type Owner {
   updatedAt: DateTime!
 }
 
+type Customer {
+  id: ID!
+  displayName: String
+  email: String!
+  photoUrl: String
+  disabled: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PaginatedCustomersResponse {
+  items: [Customer!]!
+  totalCount: Int!
+  conditionalTotalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
 type Query {
   restaurant(id: String!): Restaurant!
   user(id: String!): User
   userProfile: User
   users(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedUsersResponse!
+  customer(id: String!): Customer
+  customers(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedCustomersResponse!
 }
 
 type Mutation {
@@ -63,6 +84,8 @@ type Mutation {
   editUser(editUserInput: EditUserInput!): User!
   editStaffUser(editUserInput: EditUserInput!): User!
   deleteStaffUser(id: String!): User!
+  syncCustomer: Customer!
+  editCustomer(editCustomerInput: EditCustomerInput!): Customer!
   createTestOwnerAndRestaurant: Owner!
 }
 
@@ -78,6 +101,11 @@ input EditUserInput {
   email: String
   password: String
   photoUrl: String
+  id: ID!
+  disabled: Boolean
+}
+
+input EditCustomerInput {
   id: ID!
   disabled: Boolean
 }

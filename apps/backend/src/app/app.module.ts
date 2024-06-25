@@ -13,11 +13,13 @@ import { RolesGuard } from './auth/roles.guard';
 import { RestaurantGuard } from './auth/restaurant.guard';
 import { OwnerModule } from './owner/owner.module';
 import { join } from 'path';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
     RestaurantModule,
     UserModule,
+    CustomersModule,
     OwnerModule,
     FirebaseModule,
     ConfigModule.forRoot({

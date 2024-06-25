@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { SyncUserInput } from './dto/sync-user.input';
-import { PaginationArgs } from './dto/pagination.args';
-import { FilterUserArgs } from './dto/filter-user.args';
 import { Prisma as RestaurantPrisma } from '../../prisma-clients/restaurant';
 import { FirebaseAdminService } from '../firebase/firebase-admin.service';
 import { CreateUserInput } from './dto/create-user.input';
@@ -9,6 +7,8 @@ import { UserRole } from './entities/user-role.enum';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import { EditUserInput } from './dto/edit-user.input';
 import { RestaurantPrismaService } from '../prisma/restaurant-prisma.service';
+import { PaginationArgs } from '../common/dto/pagination.args';
+import { FilterArgs } from '../common/dto/filter.args';
 
 @Injectable()
 export class UserService {
@@ -37,12 +37,12 @@ export class UserService {
 
   async findAll(
     paginationArgs: PaginationArgs,
-    filterUserArgs: FilterUserArgs,
+    filterArgs: FilterArgs,
     slug: string,
     superadmin: boolean,
   ) {
     const { skip, take } = paginationArgs;
-    const { search, sortBy, sortOrder } = filterUserArgs;
+    const { search, sortBy, sortOrder } = filterArgs;
     const client = await this.restaurantPrismaService.getClientBySlug(slug);
     const roles = [UserRole.STAFF, ...(superadmin ? [UserRole.ADMIN] : [])];
 
@@ -64,12 +64,15 @@ export class UserService {
           role: { in: roles },
         };
 
-    const [items, totalCount] = await Promise.all([
+    const [items, conditionalTotalCount, totalCount] = await Promise.all([
       client.user.findMany({
         where: whereClause,
         skip,
         take,
         orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
+      }),
+      client.user.count({
+        where: whereClause,
       }),
       client.user.count(),
     ]);
@@ -77,7 +80,8 @@ export class UserService {
     return {
       items,
       totalCount,
-      totalPages: Math.ceil(totalCount / take),
+      conditionalTotalCount,
+      totalPages: Math.ceil(conditionalTotalCount / take),
       currentPage: Math.ceil(skip / take) + 1,
     };
   }

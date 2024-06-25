@@ -1,7 +1,7 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 
 @ArgsType()
-export class FilterUserArgs {
+export class FilterArgs {
   @Field({ nullable: true })
   search?: string;
 
