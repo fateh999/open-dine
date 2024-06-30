@@ -9,7 +9,7 @@ import { SyncOwnerInput } from './dto/sync-owner.input';
 export class OwnerService {
   constructor(
     private readonly tenantPrismaService: TenantPrismaService,
-    private readonly firebaseAdminService: FirebaseAdminService
+    private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
   async syncOwner(data: SyncOwnerInput) {

@@ -4,6 +4,7 @@ import {
   Package,
   Package2,
   ShoppingCart,
+  SquareMenu,
   Users,
   Users2,
 } from 'lucide-react';
@@ -46,6 +47,12 @@ function DashboardNavigationLayout() {
         title: 'Products',
         to: '/products',
         icon: Package,
+        allowedRoles: [UserRole.Admin, UserRole.SuperAdmin, UserRole.Staff],
+      },
+      {
+        title: 'Category',
+        to: '/categories',
+        icon: SquareMenu,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin],
       },
       {
