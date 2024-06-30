@@ -60,7 +60,7 @@ const GET_STAFF = gql`
 
 const UPDATE_STAFF = gql`
   mutation updateStaff($editUserInput: EditUserInput!) {
-    editUser(editUserInput: $editUserInput) {
+    editStaffUser(editUserInput: $editUserInput) {
       id
     }
   }

@@ -10,6 +10,7 @@ import DashboardPage from './pages/dashboard-page';
 import ProtectedRoute from './components/shared/protected-route';
 import AuthRoute from './components/shared/auth-route';
 import useAuthStateChanged from './modules/auth/hooks/use-auth-state-changed';
+import CategoriesPage from './pages/categories-page';
 
 function App() {
   useAuthStateChanged();
@@ -30,6 +31,7 @@ function App() {
           <Route path="staffs" element={<StaffsPage />} />
           <Route path="customers" element={<CustomersPage />} />
           <Route path="products" element={<ProductsPage />} />
+          <Route path="categories" element={<CategoriesPage />} />
           <Route path="analytics" element={<ProductsPage />} />
         </Route>
         <Route

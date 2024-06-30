@@ -97,24 +97,6 @@ export class UserResolver {
 
   @Roles(UserRole.ADMIN)
   @Mutation(() => User)
-  async editUser(
-    @Args('editUserInput') editUserInput: EditUserInput,
-    @RestaurantSlug() slug: string,
-  ) {
-    const firebaseUser =
-      await this.userService.updateUserInFirebase(editUserInput);
-    const syncUserInput: SyncUserInput = {
-      id: firebaseUser.uid,
-      displayName: firebaseUser.displayName,
-      email: firebaseUser.email,
-      disabled: firebaseUser.disabled,
-      photoUrl: firebaseUser.photoURL,
-    };
-    return this.userService.sync(syncUserInput, slug);
-  }
-
-  @Roles(UserRole.ADMIN)
-  @Mutation(() => User)
   async editStaffUser(
     @Args('editUserInput') editUserInput: EditUserInput,
     @RestaurantSlug() slug: string,

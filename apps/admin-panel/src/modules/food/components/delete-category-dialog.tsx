@@ -1,8 +1,8 @@
 import {
-  GetStaffQuery,
-  GetStaffQueryVariables,
-  UpdateStaffMutation,
-  UpdateStaffMutationVariables,
+  DeleteCategoryMutation,
+  DeleteCategoryMutationVariables,
+  GetCategoryQuery,
+  GetCategoryQueryVariables,
 } from '@/__generated__/graphql';
 import {
   AlertDialog,
@@ -20,49 +20,43 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 import { AlertDialogProps } from '@radix-ui/react-alert-dialog';
 import { useSearchParams } from 'react-router-dom';
 
-type UpdateStaffStatusDialogProps = AlertDialogProps & { refetch: () => void };
+type DeleteCategoryDialogProps = AlertDialogProps & { refetch: () => void };
 
-const GET_STAFF = gql`
-  query getStaff($id: String!) {
-    user(id: $id) {
+const GET_CATEGORY = gql`
+  query getCategory($id: String!) {
+    category(id: $id) {
       id
-      displayName
-      photoUrl
-      role
-      email
-      disabled
-      createdAt
-      updatedAt
+      name
     }
   }
 `;
 
-const UPDATE_STAFF = gql`
-  mutation updateStaff($editUserInput: EditUserInput!) {
-    editStaffUser(editUserInput: $editUserInput) {
+const DELETE_CATEGORY = gql`
+  mutation deleteCategory($id: String!) {
+    deleteCategory(id: $id) {
       id
     }
   }
 `;
 
-function UpdateStaffStatusDialog(props: UpdateStaffStatusDialogProps) {
+function DeleteCategoryDialog(props: DeleteCategoryDialogProps) {
   const [searchParams] = useSearchParams();
-  const statusId = searchParams.get('status') ?? '';
+  const deleteId = searchParams.get('delete') ?? '';
   const { children, open, onOpenChange, refetch } = props;
-  const { data, loading } = useQuery<GetStaffQuery, GetStaffQueryVariables>(
-    GET_STAFF,
-    { variables: { id: statusId }, skip: !statusId },
-  );
-  const { displayName, disabled } = data?.user ?? {};
-  const [updateStaff] = useMutation<
-    UpdateStaffMutation,
-    UpdateStaffMutationVariables
-  >(UPDATE_STAFF);
+  const { data, loading } = useQuery<
+    GetCategoryQuery,
+    GetCategoryQueryVariables
+  >(GET_CATEGORY, { variables: { id: deleteId }, skip: !deleteId });
+  const { name } = data?.category ?? {};
+  const [deleteCategory] = useMutation<
+    DeleteCategoryMutation,
+    DeleteCategoryMutationVariables
+  >(DELETE_CATEGORY);
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      {loading || !data?.user ? (
+      {loading || !data?.category ? (
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -80,25 +74,18 @@ function UpdateStaffStatusDialog(props: UpdateStaffStatusDialogProps) {
       ) : (
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {disabled ? 'Enable' : 'Disable'} {displayName} account?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Delete {name} category?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will {disabled ? 'enable' : 'disable'} the {displayName}'s
-              account
+              This action cannot be undone. This will delete the {name}'s
+              category
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
-                updateStaff({
-                  variables: {
-                    editUserInput: {
-                      id: statusId,
-                      disabled: !disabled,
-                    },
-                  },
+                deleteCategory({
+                  variables: { id: deleteId },
                   onCompleted: () => {
                     refetch();
                   },
@@ -114,4 +101,4 @@ function UpdateStaffStatusDialog(props: UpdateStaffStatusDialogProps) {
   );
 }
 
-export default UpdateStaffStatusDialog;
+export default DeleteCategoryDialog;

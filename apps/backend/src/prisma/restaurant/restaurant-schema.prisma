@@ -42,9 +42,11 @@ model Customer {
 }
 
 model Category {
-    id    String @id @default(cuid())
-    name  String
-    foods Food[]
+    id        String   @id @default(cuid())
+    name      String
+    foods     Food[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Food {
@@ -54,24 +56,25 @@ model Food {
     name           String
     description    String?
     photoUrl       String?
+    inStock        Boolean             @default(true)
     foodType       FoodType
     customizations FoodCustomization[]
     createdAt      DateTime            @default(now())
     updatedAt      DateTime            @updatedAt
-    OrderItem      OrderItem[]
+    orderItems     OrderItem[]
 }
 
 model FoodCustomization {
-    id                     String                   @id @default(cuid())
-    foodId                 String
-    food                   Food                     @relation(fields: [foodId], references: [id], onDelete: Cascade)
-    name                   String
-    costPrice              Float
-    sellingPrice           Float
-    isDefault              Boolean                  @default(false)
-    createdAt              DateTime                 @default(now())
-    updatedAt              DateTime                 @updatedAt
-    OrderItemCustomization OrderItemCustomization[]
+    id                      String                   @id @default(cuid())
+    foodId                  String
+    food                    Food                     @relation(fields: [foodId], references: [id], onDelete: Cascade)
+    name                    String
+    costPrice               Float
+    sellingPrice            Float
+    isDefault               Boolean                  @default(false)
+    createdAt               DateTime                 @default(now())
+    updatedAt               DateTime                 @updatedAt
+    orderItemCustomizations OrderItemCustomization[]
 }
 
 model Order {

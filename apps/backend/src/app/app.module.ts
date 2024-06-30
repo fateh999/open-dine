@@ -14,6 +14,8 @@ import { RestaurantGuard } from './auth/restaurant.guard';
 import { OwnerModule } from './owner/owner.module';
 import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
+import { CategoryModule } from './category/category.module';
+import { FoodModule } from './food/food.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { CustomersModule } from './customers/customers.module';
     CustomersModule,
     OwnerModule,
     FirebaseModule,
+    CategoryModule,
+    FoodModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

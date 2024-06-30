@@ -69,6 +69,56 @@ type PaginatedCustomersResponse {
   currentPage: Int!
 }
 
+type Category {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PaginatedCategoriesResponse {
+  items: [Category!]!
+  totalCount: Int!
+  conditionalTotalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
+type FoodCustomization {
+  name: String!
+  costPrice: Float!
+  sellingPrice: Float!
+  isDefault: Boolean
+}
+
+type Food {
+  id: String!
+  name: String!
+  description: String
+  photoUrl: String
+  categoryId: String!
+  foodType: FoodType!
+  category: Category!
+  customizations: [FoodCustomization!]!
+  inStock: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum FoodType {
+  VEG
+  NON_VEG
+  VEGAN
+}
+
+type PaginatedFoodsResponse {
+  items: [Food!]!
+  totalCount: Int!
+  conditionalTotalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
 type Query {
   restaurant(id: String!): Restaurant!
   user(id: String!): User
@@ -76,17 +126,27 @@ type Query {
   users(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedUsersResponse!
   customer(id: String!): Customer
   customers(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedCustomersResponse!
+  category(id: String!): Category
+  categories(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedCategoriesResponse!
+  food(id: String!): Food
+  foods(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedFoodsResponse!
 }
 
 type Mutation {
   createStaffUser(createUserInput: CreateUserInput!): User!
   createAdminUser(createUserInput: CreateUserInput!): User!
-  editUser(editUserInput: EditUserInput!): User!
   editStaffUser(editUserInput: EditUserInput!): User!
   deleteStaffUser(id: String!): User!
   syncCustomer: Customer!
   editCustomer(editCustomerInput: EditCustomerInput!): Customer!
   createTestOwnerAndRestaurant: Owner!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  editCategory(updateCategoryInput: UpdateCategoryInput!): Category!
+  deleteCategory(id: String!): Category!
+  createFood(createFoodInput: CreateFoodInput!): Food!
+  editFood(updateFoodInput: UpdateFoodInput!): Food!
+  deleteFood(id: String!): Food!
+  toggleFoodInStock(id: String!): Food!
 }
 
 input CreateUserInput {
@@ -108,4 +168,39 @@ input EditUserInput {
 input EditCustomerInput {
   id: ID!
   disabled: Boolean
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input UpdateCategoryInput {
+  name: String
+  id: ID!
+}
+
+input CreateFoodInput {
+  name: String!
+  description: String
+  photoUrl: String
+  categoryId: String!
+  foodType: FoodType!
+  customizations: [CreateFoodCustomizationInput!]
+}
+
+input CreateFoodCustomizationInput {
+  name: String!
+  costPrice: Float!
+  sellingPrice: Float!
+  isDefault: Boolean
+}
+
+input UpdateFoodInput {
+  name: String
+  description: String
+  photoUrl: String
+  categoryId: String
+  foodType: FoodType
+  customizations: [CreateFoodCustomizationInput!]
+  id: String!
 }
