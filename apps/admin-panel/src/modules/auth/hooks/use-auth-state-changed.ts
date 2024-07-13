@@ -45,9 +45,6 @@ function useAuthStateChanged() {
       setFirebaseLoggedIn(user ? true : false);
       if (user) {
         refetch();
-        useAuthState.setState({
-          initialized: true,
-        });
       } else {
         apolloClient.cache.reset();
         useAuthState.setState({

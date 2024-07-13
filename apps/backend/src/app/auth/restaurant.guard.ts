@@ -13,7 +13,7 @@ import { TenantPrismaService } from '../prisma/tenant-prisma.service';
 export class RestaurantGuard implements CanActivate {
   constructor(
     private readonly tenantPrismaService: TenantPrismaService,
-    private readonly reflector: Reflector
+    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

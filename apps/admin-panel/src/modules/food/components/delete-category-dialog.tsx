@@ -16,28 +16,13 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { AlertDialogProps } from '@radix-ui/react-alert-dialog';
 import { useSearchParams } from 'react-router-dom';
+import { GET_CATEGORY } from '../graphql/queries';
+import { DELETE_CATEGORY } from '../graphql/mutations';
 
 type DeleteCategoryDialogProps = AlertDialogProps & { refetch: () => void };
-
-const GET_CATEGORY = gql`
-  query getCategory($id: String!) {
-    category(id: $id) {
-      id
-      name
-    }
-  }
-`;
-
-const DELETE_CATEGORY = gql`
-  mutation deleteCategory($id: String!) {
-    deleteCategory(id: $id) {
-      id
-    }
-  }
-`;
 
 function DeleteCategoryDialog(props: DeleteCategoryDialogProps) {
   const [searchParams] = useSearchParams();

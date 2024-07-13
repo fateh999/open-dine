@@ -2,6 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { FoodType } from './food-type.enum';
 import { Category } from 'src/app/category/entities/category.entity';
 import { FoodCustomization } from './food-customization.entity';
+import { FoodStatus } from './food-status.enum';
 
 @ObjectType()
 export class Food {
@@ -29,8 +30,8 @@ export class Food {
   @Field(() => [FoodCustomization])
   customizations: FoodCustomization[];
 
-  @Field({ defaultValue: true })
-  inStock: boolean;
+  @Field(() => FoodStatus)
+  status: FoodStatus;
 
   @Field()
   createdAt: Date;

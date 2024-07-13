@@ -100,7 +100,7 @@ type Food {
   foodType: FoodType!
   category: Category!
   customizations: [FoodCustomization!]!
-  inStock: Boolean!
+  status: FoodStatus!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -111,8 +111,40 @@ enum FoodType {
   VEGAN
 }
 
+enum FoodStatus {
+  IN_STOCK
+  DRAFT
+  ARCHIVED
+  OUT_OF_STOCK
+}
+
 type PaginatedFoodsResponse {
   items: [Food!]!
+  totalCount: Int!
+  conditionalTotalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+}
+
+type MenuCategory {
+  id: ID!
+  category: Category!
+  menuOrder: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Menu {
+  id: ID!
+  name: String!
+  menuCategories: [MenuCategory!]!
+  active: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PaginatedMenusResponse {
+  items: [Menu!]!
   totalCount: Int!
   conditionalTotalCount: Int!
   totalPages: Int!
@@ -128,8 +160,11 @@ type Query {
   customers(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedCustomersResponse!
   category(id: String!): Category
   categories(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedCategoriesResponse!
+  allCategories: [Category!]!
   food(id: String!): Food
   foods(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedFoodsResponse!
+  menu(id: String!): Menu
+  menus(take: Int! = 10, skip: Int! = 0, search: String, sortBy: String, sortOrder: String): PaginatedMenusResponse!
 }
 
 type Mutation {
@@ -146,7 +181,10 @@ type Mutation {
   createFood(createFoodInput: CreateFoodInput!): Food!
   editFood(updateFoodInput: UpdateFoodInput!): Food!
   deleteFood(id: String!): Food!
-  toggleFoodInStock(id: String!): Food!
+  createMenu(createMenuInput: CreateMenuInput!): Menu!
+  editMenu(updateMenuInput: UpdateMenuInput!): Menu!
+  updateMenuCategoryOrder(updateMenuCategoryOrderInput: UpdateMenuCategoryOrderInput!): [MenuCategory!]!
+  deleteMenu(id: String!): Menu!
 }
 
 input CreateUserInput {
@@ -185,6 +223,7 @@ input CreateFoodInput {
   photoUrl: String
   categoryId: String!
   foodType: FoodType!
+  status: FoodStatus!
   customizations: [CreateFoodCustomizationInput!]
 }
 
@@ -201,6 +240,34 @@ input UpdateFoodInput {
   photoUrl: String
   categoryId: String
   foodType: FoodType
+  status: FoodStatus
   customizations: [CreateFoodCustomizationInput!]
   id: String!
+}
+
+input CreateMenuInput {
+  name: String!
+  active: Boolean = false
+  menuCategories: [CreateMenuCategoryInput!]!
+}
+
+input CreateMenuCategoryInput {
+  categoryId: String!
+  menuOrder: Float!
+}
+
+input UpdateMenuInput {
+  name: String
+  active: Boolean!
+  menuCategories: [CreateMenuCategoryInput!]
+  id: ID!
+}
+
+input UpdateMenuCategoryOrderInput {
+  id: String!
+  menuCategoryOrders: [MenuCategoryOrder!]!
+}
+
+input MenuCategoryOrder {
+  menuOrder: Float!
 }

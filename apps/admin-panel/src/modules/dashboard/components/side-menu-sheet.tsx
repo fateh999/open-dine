@@ -44,20 +44,22 @@ function SideMenuSheet(props: SideMenuSheetProps) {
                 key={route.to}
                 allowedRoles={route.allowedRoles}
               >
-                <Link
-                  to={route.to}
-                  className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${active ? 'bg-muted' : ''} ${active ? 'text-foreground' : 'text-muted-foreground'} hover:text-foreground`}
-                >
-                  <route.icon className="h-5 w-5" />
-                  {route.title}
-                  {route.count ? (
-                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      {route.count}
-                    </Badge>
-                  ) : (
-                    <></>
-                  )}
-                </Link>
+                <SheetTrigger asChild>
+                  <Link
+                    to={route.to}
+                    className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${active ? 'bg-muted' : ''} ${active ? 'text-foreground' : 'text-muted-foreground'} hover:text-foreground`}
+                  >
+                    <route.icon className="h-5 w-5" />
+                    {route.title}
+                    {route.count ? (
+                      <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                        {route.count}
+                      </Badge>
+                    ) : (
+                      <></>
+                    )}
+                  </Link>
+                </SheetTrigger>
               </RoleBasedWrapper>
             );
           })}

@@ -53,13 +53,4 @@ export class FoodResolver {
   async deleteFood(@Args('id') id: string, @RestaurantSlug() slug: string) {
     return this.foodService.deleteFood(id, slug);
   }
-
-  @Roles(UserRole.ADMIN)
-  @Mutation(() => Food)
-  async toggleFoodInStock(
-    @Args('id') id: string,
-    @RestaurantSlug() slug: string,
-  ) {
-    return this.foodService.toggleFoodInStock(id, slug);
-  }
 }

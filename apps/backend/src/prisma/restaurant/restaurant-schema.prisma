@@ -14,6 +14,13 @@ enum FoodType {
     VEGAN
 }
 
+enum FoodStatus {
+    IN_STOCK
+    OUT_OF_STOCK
+    DRAFT
+    ARCHIVED
+}
+
 enum UserRole {
     ADMIN
     STAFF
@@ -42,11 +49,12 @@ model Customer {
 }
 
 model Category {
-    id        String   @id @default(cuid())
-    name      String
-    foods     Food[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id             String         @id @default(cuid())
+    name           String
+    foods          Food[]
+    menuCategories MenuCategory[]
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
 }
 
 model Food {
@@ -56,7 +64,7 @@ model Food {
     name           String
     description    String?
     photoUrl       String?
-    inStock        Boolean             @default(true)
+    status         FoodStatus          @default(DRAFT)
     foodType       FoodType
     customizations FoodCustomization[]
     createdAt      DateTime            @default(now())
@@ -105,4 +113,26 @@ model OrderItemCustomization {
     orderItem       OrderItem         @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
     customizationId String
     customization   FoodCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
+}
+
+model Menu {
+    id             String         @id @default(cuid())
+    name           String
+    menuCategories MenuCategory[]
+    active         Boolean        @default(false)
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
+}
+
+model MenuCategory {
+    id         String   @id @default(cuid())
+    menuId     String
+    menu       Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    categoryId String
+    category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    menuOrder  Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@unique([menuId, categoryId, menuOrder])
 }

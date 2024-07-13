@@ -4,7 +4,7 @@ import {
 } from '@/__generated__/graphql';
 import { Button } from '@/components/ui/button';
 import EmptyState from '@/modules/dashboard/components/empty-state';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { PlusCircle } from 'lucide-react';
 import {
   Card,
@@ -17,7 +17,6 @@ import {
 import { useSearchParams } from 'react-router-dom';
 import PaginationBar from '@/components/shared/pagination-bar';
 import { useDebounce } from 'use-debounce';
-import EditStaffDialog from '@/modules/staff/components/edit-staff-dialog';
 import { useState } from 'react';
 import { LoadingSpinner } from '@/components/ui/spinner';
 import BreadcrumbBar from '@/components/shared/breadcrumb-bar';
@@ -26,23 +25,8 @@ import DashboardContentWrapper from '@/components/shared/dashboard-content-wrapp
 import Categories from '@/modules/food/components/categories';
 import AddCategoryDialog from '@/modules/food/components/add-category-dialog';
 import DeleteCategoryDialog from '@/modules/food/components/delete-category-dialog';
-
-const GET_CATEGORIES = gql`
-  query getCategories($take: Int!, $skip: Int!, $search: String) {
-    categories(skip: $skip, take: $take, search: $search) {
-      items {
-        id
-        name
-        updatedAt
-        createdAt
-      }
-      totalCount
-      conditionalTotalCount
-      totalPages
-      currentPage
-    }
-  }
-`;
+import EditCategoryDialog from '@/modules/food/components/edit-category-dialog';
+import { GET_CATEGORIES } from '@/modules/food/graphql/queries';
 
 function CategoriesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -150,7 +134,7 @@ function CategoriesPage() {
         </EmptyState>
       )}
 
-      <EditStaffDialog
+      <EditCategoryDialog
         open={!!searchParams.get('edit')}
         onOpenChange={(open) => {
           if (!open) {

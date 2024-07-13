@@ -35,7 +35,7 @@ export class CategoryService {
         where: whereClause,
         skip,
         take,
-        orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
+        orderBy: sortBy ? { [sortBy]: sortOrder } : { updatedAt: 'desc' },
       }),
       client.category.count({
         where: whereClause,
@@ -50,6 +50,14 @@ export class CategoryService {
       totalPages: Math.ceil(conditionalTotalCount / take),
       currentPage: Math.ceil(skip / take) + 1,
     };
+  }
+
+  async findAllCategories(slug: string) {
+    const client = await this.restaurantPrismaService.getClientBySlug(slug);
+
+    return client.category.findMany({
+      orderBy: { name: 'asc' },
+    });
   }
 
   async createCategory(createCategoryInput: CreateCategoryInput, slug: string) {

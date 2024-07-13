@@ -6,13 +6,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Switch } from '@/components/ui/switch';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import ActionDropdown from '@/modules/auth/components/action-dropdown';
 import { Badge } from '@/components/ui/badge';
-import { useSearchParams } from 'react-router-dom';
-import { FoodType } from '@/__generated__/graphql';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { FoodStatus, FoodType } from '@/__generated__/graphql';
+import { IKImage } from 'imagekitio-react';
+import { formatEnumValue } from '@/utils/helpers';
 
 type ProductsProps = {
   products: {
@@ -23,7 +24,7 @@ type ProductsProps = {
     description?: string | null | undefined;
     foodType: FoodType;
     name: string;
-    inStock: boolean;
+    status: FoodStatus;
     createdAt: string;
     updatedAt: string;
     customizations: {
@@ -38,6 +39,7 @@ type ProductsProps = {
 function Products(props: ProductsProps) {
   const { products } = props;
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   return (
     <Table>
@@ -47,8 +49,8 @@ function Products(props: ProductsProps) {
             <span className="sr-only">Image</span>
           </TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead className="hidden md:table-cell">Email</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead className="hidden md:table-cell">Type</TableHead>
           <TableHead className="hidden md:table-cell">Status</TableHead>
           <TableHead className="hidden md:table-cell">Updated at</TableHead>
           <TableHead>
@@ -60,26 +62,31 @@ function Products(props: ProductsProps) {
         {products.map((product) => (
           <TableRow key={product.id}>
             <TableCell className="hidden sm:table-cell">
-              <Avatar>
-                <AvatarImage src={product.photoUrl ?? ''} />
-                <AvatarFallback>{product.name?.charAt(0)}</AvatarFallback>
-              </Avatar>
+              {product.photoUrl ? (
+                <IKImage
+                  transformation={[{ height: '40px', width: '40px' }]}
+                  path={product.photoUrl}
+                  className="aspect-square w-[40px] h-[40px] rounded-full object-cover"
+                  loading="lazy"
+                  lqip={{ active: true, quality: 10, blur: 10 }}
+                />
+              ) : (
+                <Avatar>
+                  <AvatarFallback>{product.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+              )}
             </TableCell>
             <TableCell className="font-medium">{product.name}</TableCell>
             <TableCell>
               <Badge variant="outline">{product.category.name}</Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
-              <Badge variant="outline">{product.foodType}</Badge>
+              <Badge variant="outline">
+                {formatEnumValue(product.foodType)}
+              </Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
-              <Switch
-                checked={product.inStock}
-                onCheckedChange={() => {
-                  searchParams.set('status', product.id);
-                  setSearchParams(searchParams);
-                }}
-              />
+              <Badge variant="outline">{formatEnumValue(product.status)}</Badge>
             </TableCell>
             <TableCell className="hidden md:table-cell">
               {format(product.updatedAt, 'MMMM dd, yyyy HH:mm')}
@@ -91,8 +98,7 @@ function Products(props: ProductsProps) {
                   {
                     label: 'Edit',
                     onClick: () => {
-                      // searchParams.set('edit', staff.id);
-                      // setSearchParams(searchParams);
+                      navigate(`./${product.id}/edit`);
                     },
                   },
                   {

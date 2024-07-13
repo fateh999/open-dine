@@ -30,6 +30,12 @@ export class CategoryResolver {
     return this.categoryService.findAll(paginationArgs, filterArgs, slug);
   }
 
+  @Roles(UserRole.ADMIN)
+  @Query(() => [Category])
+  async allCategories(@RestaurantSlug() slug: string) {
+    return this.categoryService.findAllCategories(slug);
+  }
+
   @Mutation(() => Category)
   async createCategory(
     @Args('createCategoryInput') createCategoryInput: CreateCategoryInput,

@@ -19,8 +19,8 @@ function BreadcrumbBar(props: BreadcrumbBarProps) {
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
         {routes.map(({ label, to }, index) => (
-          <Fragment>
-            <BreadcrumbItem key={to}>
+          <Fragment key={to}>
+            <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link to={to}>{label}</Link>
               </BreadcrumbLink>

@@ -38,7 +38,7 @@ export class FoodService {
         where: whereClause,
         skip,
         take,
-        orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
+        orderBy: sortBy ? { [sortBy]: sortOrder } : { updatedAt: 'desc' },
         include: { category: true, customizations: true },
       }),
       client.food.count({
@@ -89,39 +89,8 @@ export class FoodService {
     });
   }
 
-  async toggleFoodVisibility(updateFoodInput: UpdateFoodInput, slug: string) {
-    const client = await this.restaurantPrismaService.getClientBySlug(slug);
-    const { id, customizations, ...data } = updateFoodInput;
-
-    return client.food.update({
-      where: { id },
-      data: {
-        ...data,
-        customizations: {
-          deleteMany: {},
-          create: customizations,
-        },
-      },
-      include: { category: true, customizations: true },
-    });
-  }
-
   async deleteFood(id: string, slug: string) {
     const client = await this.restaurantPrismaService.getClientBySlug(slug);
     return client.food.delete({ where: { id } });
-  }
-
-  async toggleFoodInStock(id: string, slug: string) {
-    const client = await this.restaurantPrismaService.getClientBySlug(slug);
-    const food = await client.food.findUnique({ where: { id } });
-
-    if (!food) {
-      throw new Error('Food item not found');
-    }
-
-    return client.food.update({
-      where: { id },
-      data: { inStock: !food.inStock },
-    });
   }
 }

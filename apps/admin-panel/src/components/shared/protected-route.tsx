@@ -18,6 +18,12 @@ function ProtectedRoute(props: Pick<RouteProps, 'children'>) {
     );
   }
 
+  console.log({
+    loggedIn,
+    isAlreadyInAuthRoute,
+    initialized,
+  });
+
   if (!loggedIn && !isAlreadyInAuthRoute && initialized) {
     return <Navigate to="/login" />;
   }

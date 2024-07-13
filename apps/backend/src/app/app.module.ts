@@ -16,9 +16,12 @@ import { join } from 'path';
 import { CustomersModule } from './customers/customers.module';
 import { CategoryModule } from './category/category.module';
 import { FoodModule } from './food/food.module';
+import { ImagekitModule } from './imagekit/imagekit.module';
+import { MenuModule } from './menu/menu.module';
 
 @Module({
   imports: [
+    ImagekitModule,
     RestaurantModule,
     UserModule,
     CustomersModule,
@@ -26,6 +29,7 @@ import { FoodModule } from './food/food.module';
     FirebaseModule,
     CategoryModule,
     FoodModule,
+    MenuModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

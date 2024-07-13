@@ -1,12 +1,12 @@
 import {
+  Contact,
+  CookingPot,
   Home,
-  LineChart,
-  Package,
+  NotebookText,
   Package2,
   ShoppingCart,
   SquareMenu,
-  Users,
-  Users2,
+  User,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link, Outlet } from 'react-router-dom';
@@ -34,31 +34,31 @@ function DashboardNavigationLayout() {
       {
         title: 'Staffs',
         to: '/staffs',
-        icon: Users2,
+        icon: Contact,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin],
       },
       {
         title: 'Customers',
         to: '/customers',
-        icon: Users,
+        icon: User,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin],
       },
       {
         title: 'Products',
         to: '/products',
-        icon: Package,
+        icon: CookingPot,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin, UserRole.Staff],
       },
       {
-        title: 'Category',
+        title: 'Categories',
         to: '/categories',
         icon: SquareMenu,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin],
       },
       {
-        title: 'Analytics',
-        to: '/analytics',
-        icon: LineChart,
+        title: 'Menus',
+        to: '/menus',
+        icon: NotebookText,
         allowedRoles: [UserRole.Admin, UserRole.SuperAdmin],
       },
     ],

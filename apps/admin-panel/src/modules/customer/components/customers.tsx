@@ -55,9 +55,7 @@ function Customers(props: CustomersProps) {
             <TableCell className="font-medium">
               {customer.displayName}
             </TableCell>
-            <TableCell className="hidden md:table-cell">
-              {customer.email}
-            </TableCell>
+            <TableCell>{customer.email}</TableCell>
             <TableCell className="hidden md:table-cell">
               <Switch
                 checked={!customer.disabled}

@@ -1,3 +1,5 @@
+import { IKImage } from 'imagekitio-react';
+
 type AuthLayoutProps = {
   children?: JSX.Element | JSX.Element[];
 };
@@ -11,10 +13,10 @@ function AuthLayout(props: AuthLayoutProps) {
         {children}
       </div>
       <div className="hidden bg-muted lg:block">
-        <img
-          src="https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt="Image"
+        <IKImage
+          path={'/pexels-reneterp-1581384_YsXqfqK84.jpg'}
           className="h-lvh w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          loading={'lazy'}
         />
       </div>
     </div>

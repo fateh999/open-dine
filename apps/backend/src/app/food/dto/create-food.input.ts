@@ -1,6 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { CreateFoodCustomizationInput } from './create-food-customization.input';
 import { FoodType } from '../entities/food-type.enum';
+import { FoodStatus } from '../entities/food-status.enum';
 
 @InputType()
 export class CreateFoodInput {
@@ -18,6 +19,9 @@ export class CreateFoodInput {
 
   @Field(() => FoodType)
   foodType: FoodType;
+
+  @Field(() => FoodStatus)
+  status: FoodStatus;
 
   @Field(() => [CreateFoodCustomizationInput], { nullable: true })
   customizations?: CreateFoodCustomizationInput[];

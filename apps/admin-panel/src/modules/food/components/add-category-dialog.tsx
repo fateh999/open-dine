@@ -20,12 +20,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { ADD_CATEGORY } from '../graphql/mutations';
 
 const CreateCategoryInputSchema = z.object({
   name: z.string().min(1, 'Name is required.'),
@@ -34,14 +35,6 @@ const CreateCategoryInputSchema = z.object({
 type AddCategoryDialogProps = DialogProps & {
   refetch: () => void;
 };
-
-const ADD_CATEGORY = gql`
-  mutation addCategory($createCategoryInput: CreateCategoryInput!) {
-    createCategory(createCategoryInput: $createCategoryInput) {
-      id
-    }
-  }
-`;
 
 function AddCategoryDialog(props: AddCategoryDialogProps) {
   const { refetch, open, onOpenChange } = props;

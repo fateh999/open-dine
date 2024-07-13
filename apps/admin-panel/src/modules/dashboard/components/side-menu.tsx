@@ -27,9 +27,8 @@ function SideMenu(props: SideMenuProps) {
         {routes.map((route) => {
           const active = location?.pathname === route.to;
           return (
-            <RoleBasedWrapper allowedRoles={route.allowedRoles}>
+            <RoleBasedWrapper key={route.to} allowedRoles={route.allowedRoles}>
               <Link
-                key={route.to}
                 to={route.to}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${active ? 'bg-muted' : ''} ${active ? 'text-primary' : 'text-muted-foreground'}`}
               >
