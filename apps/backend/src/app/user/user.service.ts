@@ -69,7 +69,7 @@ export class UserService {
         where: whereClause,
         skip,
         take,
-        orderBy: sortBy ? { [sortBy]: sortOrder } : { createdAt: 'desc' },
+        orderBy: sortBy ? { [sortBy]: sortOrder } : { updatedAt: 'desc' },
       }),
       client.user.count({
         where: whereClause,
