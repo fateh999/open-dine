@@ -2,21 +2,26 @@
   "private": true,
   "workspaces": [
     "apps/backend",
-    "apps/admin-panel"
+    "apps/admin-panel",
+    "apps/online-menu"
   ],
   "scripts": {
-    "start": "concurrently \"yarn start:admin\" \"yarn start:backend\"",
+    "start": "concurrently \"yarn start:admin\" \"yarn start:backend\" \"yarn start:online\"",
     "start:admin": "yarn workspace admin-panel dev",
     "start:backend": "yarn workspace backend start:dev",
-    "build": "concurrently \"yarn build:admin\" \"yarn build:backend\"",
+    "start:online": "yarn workspace online-menu dev -p 4000",
+    "build": "concurrently \"yarn build:admin\" \"yarn build:backend\" \"yarn build:online\"",
     "build:admin": "yarn workspace admin-panel build",
     "build:backend": "yarn workspace backend build",
-    "lint": "concurrently \"yarn lint:admin\" \"yarn lint:backend\"",
+    "build:online": "yarn workspace online-menu build",
+    "lint": "concurrently \"yarn lint:admin\" \"yarn lint:backend\" \"yarn lint:online\"",
     "lint:admin": "yarn workspace admin-panel lint",
     "lint:backend": "yarn workspace backend lint",
-    "test": "concurrently \"yarn test:admin\" \"yarn test:backend\"",
+    "lint:online": "yarn workspace online-menu lint",
+    "test": "concurrently \"yarn test:admin\" \"yarn test:backend\" \"yarn test:online\"",
     "test:admin": "yarn workspace admin-panel test",
-    "test:backend": "yarn workspace backend test"
+    "test:backend": "yarn workspace backend test",
+    "test:online": "yarn workspace online-menu test"
   },
   "devDependencies": {
     "concurrently": "^7.0.0"
